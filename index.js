@@ -5,16 +5,14 @@
 var restify = require('restify');
 var mysql = require('mysql');
 connection = mysql.createConnection({
-               host : 'bdagrotec.000webhostapp.com',
-               user : 'id4843125_sa',
-               password : 'raulmtz1',
-               database: 'id4843125_agrotec'
+               host : 'sql9.freemysqlhosting.net',
+               user : 'sql9227634',
+               password : '9a79wEU3uJ',
+               database: 'sql9227634'
          });
 //--------------------------------------------------------------
 //---------------------INICIAR SERVIDOR-------------------------
 
-var ip_addr = 'localhost;
-var port    =  '8080';
  
 var server = restify.createServer({
     name : "usuarios"
@@ -22,9 +20,8 @@ var server = restify.createServer({
 
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.bodyParser());
-server.listen(port ,ip_addr, function(){
-    console.log('%s activo en %s ', server.name , server.url);
-});
+
+server.listen(process.env.PORT || 8080 , () => console.log('OK'))
 //--------------------------------------------------------------
 var PATH = '/usuarios'
 server.get({path : PATH , version : '0.0.1'} , findAllUsers);
