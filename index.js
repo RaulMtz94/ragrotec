@@ -13,7 +13,7 @@ connection = mysql.createConnection({
 //--------------------------------------------------------------
 //---------------------INICIAR SERVIDOR-------------------------
 
-var ip_addr = '127.0.0.1';
+var ip_addr = 'localhost;
 var port    =  '8080';
  
 var server = restify.createServer({
