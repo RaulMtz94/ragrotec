@@ -21,7 +21,7 @@ var server = restify.createServer({
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.bodyParser());
 
-server.listen(process.env.PORT || 8080 , () => console.log('OK'))
+server.listen(process.env.PORT || 3000 , () => console.log('OK'))
 //--------------------------------------------------------------
 var PATH = '/usuarios'
 server.get({path : PATH , version : '0.0.1'} , findAllUsers);
