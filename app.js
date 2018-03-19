@@ -1,16 +1,20 @@
+
+
+
 //----------------CONEXION A LA BASE DE DATOS-------------------
 var restify = require('restify');
 var mysql = require('mysql');
 connection = mysql.createConnection({
-               host : 'localhost',
-               user : 'root',
+               host : 'bdagrotec.000webhostapp.com',
+               user : 'id4843125_sa',
                password : 'raulmtz1',
-               database: 'AGROTEC'
+               database: 'id4843125_agrotec'
          });
 //--------------------------------------------------------------
 //---------------------INICIAR SERVIDOR-------------------------
+
 var ip_addr = '127.0.0.1';
-var port    =  '1234';
+var port    =  '8080';
  
 var server = restify.createServer({
     name : "usuarios"
