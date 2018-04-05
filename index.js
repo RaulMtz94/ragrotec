@@ -1,16 +1,47 @@
-
-
-
-//----------------CONEXION A LA BASE DE DATOS-------------------
+var jwt = require('jwt-simple');
 var restify = require('restify');
 var mysql = require('mysql');
-connection = mysql.createConnection({
-               host : 'sql9.freemysqlhosting.net',
-               user : 'sql9227634',
-               password : '9a79wEU3uJ',
-               database: 'sql9227634'
-         });
-//--------------------------------------------------------------
+//----------CONTROL DE CONEXION MYSQL DATABASE-------------
+var db_config = {
+      host: 'sql135.main-hosting.eu',
+      user: 'u371251824_raul',
+      password: 'raulmtz1',
+      database: 'u371251824_agro'
+  };
+var connection;
+function handleDisconnect() {
+    connection = mysql.createConnection(db_config); // Recreate the connection, since
+                                                    // the old one cannot be reused.
+  
+    connection.connect(function(err) {              // The server is either down
+      if(err) {                                     // or restarting (takes a while sometimes).
+        console.log('error when connecting to db:', err);
+        setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+      }                                     // to avoid a hot loop, and to allow our node script to
+    });                                     // process asynchronous requests in the meantime.
+                                            // If you're also serving http, display a 503 error.
+    connection.on('error', function(err) {
+      console.log('db error', err);
+      if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+        handleDisconnect();                         // lost due to either server restart, or a
+      } else {                                      // connnection idle timeout (the wait_timeout
+        throw err;                                  // server variable configures this)
+      }
+    });
+  }
+  
+  handleDisconnect();
+
+
+
+//---------------VARIABLES PARA JWT-----------------------------
+var payload = { nombre: 'raul' };
+var secret = 'holamundo';
+var token = jwt.encode(payload, secret);
+console.log(token);
+var decoded = jwt.decode(token, secret);
+console.log(decoded); //=> { foo: 'bar' }
+
 //---------------------INICIAR SERVIDOR-------------------------
 
  
@@ -21,14 +52,29 @@ var server = restify.createServer({
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.bodyParser());
 
-server.listen(process.env.PORT || 3000 , () => console.log('OK'))
+server.listen(process.env.PORT  , () => console.log('OK'))
 //--------------------------------------------------------------
 var PATH = '/usuarios'
 server.get({path : PATH , version : '0.0.1'} , findAllUsers);
 server.get({path : PATH +'/:userId' , version : '0.0.1'} , findUser);
 server.post({path : PATH , version: '0.0.1'} , postNewUser);
 server.del({path : PATH +'/:userId' , version: '0.0.1'} , deleteUser);
+server.get({path:'/coordenadas', version : '0.0.1' }, buscarcoordenadas);
 
+
+//----------ruta protegida------------------
+server.post('/protegida',function(req,res,next){
+    var token = req.headers.secret;
+    console.log(token);
+    if(secret==token){
+        console.log('Acceso');
+        res.redirect('/usuarios',next);
+    }else{
+        console.log(req.headers.secret);
+        console.log("Error de auth");
+    }
+   
+});
 
 //--------------------------------------------------------------
 //------------------------FUNCION PARA LEER TODOS LOS USUARIOS--
@@ -69,3 +115,27 @@ function deleteUser(req , res , next){
         res.send(200, 'Eliminado con exito');
     }); 
 }
+//--------------------BUSCAR COORDENADAS---------------------
+function buscarcoordenadas(req, res, next){
+    connection.query('SELECT * FROM coordenadas', function (error, results){
+      if(error) throw error;
+      console.log(results);
+      res.send(200, results);
+      return next();
+  });
+}
+
+ /*
+server.use(jwt({
+    secret: 'holamundo',
+    credentialsRequired: false,
+    getToken: function fromHeaderOrQuerystring (req) {
+      if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+          return req.headers.authorization.split(' ')[1];
+      } else if (req.query && req.query.token) {
+        return req.query.token;
+      }
+      return null;
+    }
+  }));
+  */
