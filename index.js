@@ -41,6 +41,7 @@ var token = jwt.encode(payload, secret);
 console.log(token);
 var decoded = jwt.decode(token, secret);
 console.log(decoded); //=> { foo: 'bar' }
+var consultaact ="SELECT idasignaciontareas , actividades.nombre , actividades.descripcion , lotes.latitud , lotes.longitud FROM asignaciontareas INNER JOIN actividades ON actividades.idactividades= asignaciontareas.idactividad INNER JOIN lotes ON asignaciontareas.idLotes = lotes.idlotes where asignaciontareas.idempleado =" ;
 
 //---------------------INICIAR SERVIDOR-------------------------
 
@@ -52,15 +53,38 @@ var server = restify.createServer({
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.bodyParser());
 
-server.listen(process.env.PORT  , () => console.log('OK'))
+server.listen(process.env.PORT || 3000 , () => console.log('OK'))
 //--------------------------------------------------------------
 var PATH = '/usuarios'
 server.get({path : PATH , version : '0.0.1'} , findAllUsers);
 server.get({path : PATH +'/:userId' , version : '0.0.1'} , findUser);
 server.post({path : PATH , version: '0.0.1'} , postNewUser);
 server.del({path : PATH +'/:userId' , version: '0.0.1'} , deleteUser);
-server.get({path:'/coordenadas', version : '0.0.1' }, buscarcoordenadas);
-
+//------------------------BUSCAR COORDENADAS----------------------
+server.get({path:'/actividades'+'/:idUsuario',version:'0.0.1'},buscarActividad);
+//------------------------------------------------------------------------------
+server.get({path:'/buscaridusuario'+'/:nombreusuario',version:'0.0.1'},buscaridusuario);
+//-------------------------BUSCAR ACTIVIDAD POR ID DE USUARIO--------------
+//-------------------FUNCION PARA ENCONTRAR UN USUARIO EN ESPECIFICO-------
+function buscarActividad(req, res, next){
+  connection.query(consultaact+'"'+req.params.idUsuario+'"' + 'AND asignaciontareas.estatus=1;', function(error, results){
+     if(error) throw error;
+      console.log(results);
+      res.send(200, results);
+      return next();
+  });
+}
+//-----------------------------------------------------------------
+//--------------------------BUSCAR ID USUARIO----------------------
+function buscaridusuario(req, res, next){
+  connection.query('SELECT id FROM usuarios WHERE username="'+req.params.nombreusuario+'"', function(error, results){
+     if(error) throw error;
+      console.log(results);
+      res.send(200, results);
+      return next();
+  });
+}
+//-----------------------------------------------------------------
 
 //----------ruta protegida------------------
 server.post('/protegida',function(req,res,next){
