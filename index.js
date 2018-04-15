@@ -31,9 +31,6 @@ function handleDisconnect() {
   }
   
   handleDisconnect();
-
-
-
 //---------------VARIABLES PARA JWT-----------------------------
 var payload = { nombre: 'raul' };
 var secret = 'holamundo';
