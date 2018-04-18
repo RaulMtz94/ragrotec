@@ -1,13 +1,27 @@
+
 var jwt = require('jwt-simple');
 var restify = require('restify');
 var mysql = require('mysql');
 //----------CONTROL DE CONEXION MYSQL DATABASE-------------
+
 var db_config = {
       host: 'sql135.main-hosting.eu',
       user: 'u371251824_raul',
       password: 'raulmtz1',
       database: 'u371251824_agro'
   };
+  
+  //---------------CONEXION LOCAL
+  /*
+  var db_config = {
+    host: 'localhost',
+    user: 'root',
+    password: 'raulmtz1',
+    database: 'agrotec'
+};
+*/
+  //-------------------------------
+
 var connection;
 function handleDisconnect() {
     connection = mysql.createConnection(db_config); // Recreate the connection, since
@@ -38,6 +52,7 @@ var token = jwt.encode(payload, secret);
 console.log(token);
 var decoded = jwt.decode(token, secret);
 console.log(decoded); //=> { foo: 'bar' }
+
 var consultaact ="SELECT idasignaciontareas , actividades.nombre , actividades.descripcion , lotes.latitud , lotes.longitud FROM asignaciontareas INNER JOIN actividades ON actividades.idactividades= asignaciontareas.idactividad INNER JOIN lotes ON asignaciontareas.idLotes = lotes.idlotes where asignaciontareas.idempleado =" ;
 
 //---------------------INICIAR SERVIDOR-------------------------
@@ -50,7 +65,10 @@ var server = restify.createServer({
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.bodyParser());
 
-server.listen(process.env.PORT , () => console.log('OK'))
+server.listen(process.env.PORT || 3000 , () => console.log('OK'))
+
+
+
 //--------------------------------------------------------------
 var PATH = '/usuarios'
 server.get({path : PATH , version : '0.0.1'} , findAllUsers);
@@ -82,6 +100,49 @@ function buscaridusuario(req, res, next){
   });
 }
 //-----------------------------------------------------------------
+//----------------------------------------POST PARA USUARIOS ---------
+server.post('/login',function(req,res){
+  var users={
+    "email":req.body.email,
+    "password":req.body.password
+  }
+  var email= req.body.email;
+  var password = req.body.password;
+  connection.query('SELECT * FROM usuarios WHERE username = ?',[email], function (error, results, fields) {
+    
+  if (error) {
+    // console.log("error ocurred",error);
+    res.send({
+      "code":400,
+      "failed":"A ocurrido un error!"
+    })
+  }else{
+    // console.log('The solution is: ', results);
+    if(results.length >0){
+      console.log(results);
+      console.log(results[0].password);
+      if(results[0].password == password){
+        res.send({
+          "code":200,
+          "success":"Login completo"
+            });
+      }
+      else{
+        res.send({
+          "code":204,
+          "success":"El email y el password no coinciden"
+            });
+      }
+    }
+    else{
+      res.send({
+        "code":204,
+        "success":"El email no existe"
+          });
+    }
+  }
+  });
+});
 
 //----------ruta protegida------------------
 server.post('/protegida',function(req,res,next){
@@ -93,8 +154,7 @@ server.post('/protegida',function(req,res,next){
     }else{
         console.log(req.headers.secret);
         console.log("Error de auth");
-    }
-   
+    } 
 });
 
 //--------------------------------------------------------------
