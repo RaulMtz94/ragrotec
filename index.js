@@ -80,7 +80,7 @@ server.get({path:'/actividades'+'/:idUsuario',version:'0.0.1'},buscarActividad);
 //------------------------------------------------------------------------------
 server.get({path:'/buscaridusuario'+'/:nombreusuario',version:'0.0.1'},buscaridusuario);
 //-------------------------BUSCAR COORDENADAS POR ID ACTIVIDAD--------------
-server.get({path:'/coordenadas'+'/:idActividad',version:'0.0.1'},bucarCO);
+server.get({path:'/coordenadas'+'/:idActividad',version:'0.0.1'},buscarCO);
 //-------------------FUNCION PARA ENCONTRAR UN USUARIO EN ESPECIFICO-------
 function buscarActividad(req, res, next){
   connection.query(consultaact+'"'+req.params.idUsuario+'"' + 'AND asignaciontareas.estatus=1;', function(error, results){
