@@ -54,7 +54,7 @@ var decoded = jwt.decode(token, secret);
 console.log(decoded); //=> { foo: 'bar' }
 
 var consultaact ="SELECT idasignaciontareas , actividades.nombre , actividades.descripcion , lotes.latitud , lotes.longitud FROM asignaciontareas INNER JOIN actividades ON actividades.idactividades= asignaciontareas.idactividad INNER JOIN lotes ON asignaciontareas.idLotes = lotes.idlotes where asignaciontareas.idempleado =" ;
-
+var consultacoordenadas = "SELECT idasignaciontareas , actividades.nombre  , lotes.latitud , lotes.longitud FROM asignaciontareas INNER JOIN actividades ON actividades.idactividades= asignaciontareas.idactividad INNER JOIN lotes ON asignaciontareas.idLotes = lotes.idlotes where   asignaciontareas.estatus=1 AND asignaciontareas.idasignaciontareas = ";
 //---------------------INICIAR SERVIDOR-------------------------
 
  
@@ -79,7 +79,8 @@ server.del({path : PATH +'/:userId' , version: '0.0.1'} , deleteUser);
 server.get({path:'/actividades'+'/:idUsuario',version:'0.0.1'},buscarActividad);
 //------------------------------------------------------------------------------
 server.get({path:'/buscaridusuario'+'/:nombreusuario',version:'0.0.1'},buscaridusuario);
-//-------------------------BUSCAR ACTIVIDAD POR ID DE USUARIO--------------
+//-------------------------BUSCAR COORDENADAS POR ID ACTIVIDAD--------------
+server.get({path:'/coordenadas'+'/:idActividad',version:'0.0.1'},bucarCO);
 //-------------------FUNCION PARA ENCONTRAR UN USUARIO EN ESPECIFICO-------
 function buscarActividad(req, res, next){
   connection.query(consultaact+'"'+req.params.idUsuario+'"' + 'AND asignaciontareas.estatus=1;', function(error, results){
@@ -90,6 +91,15 @@ function buscarActividad(req, res, next){
   });
 }
 //-----------------------------------------------------------------
+//----------------BUSCAR COORDENADAS-------------------------------
+function buscarCO(req, res, next){
+  connection.query(consultacoordenadas+'"'+req.params.idActividad+'";', function(error, results){
+     if(error) throw error;
+      console.log(results);
+      res.send(200, results);
+      return next();
+  });
+}
 //--------------------------BUSCAR ID USUARIO----------------------
 function buscaridusuario(req, res, next){
   connection.query('SELECT id FROM usuarios WHERE username="'+req.params.nombreusuario+'"', function(error, results){
