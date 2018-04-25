@@ -99,8 +99,9 @@ function buscaridusuario(req, res, next){
       return next();
   });
 }
-//-----------------------------------------------------------------
-//----------------------------------------POST PARA USUARIOS ---------
+//--------------------------------------------------------------------
+//-------------------------POST PARA USUARIOS ------------------------
+//Falta filtro para usuarios activos.---------------------------------
 server.post('/login',function(req,res){
   var users={
     "email":req.body.email,
@@ -108,7 +109,7 @@ server.post('/login',function(req,res){
   }
   var email= req.body.email;
   var password = req.body.password;
-  connection.query('SELECT * FROM usuarios WHERE username = ?',[email], function (error, results, fields) {
+  connection.query('SELECT * FROM usuarios WHERE  username = ?',[email], function (error, results, fields) {
     
   if (error) {
     // console.log("error ocurred",error);
