@@ -55,6 +55,7 @@ console.log(decoded); //=> { foo: 'bar' }
 
 var consultaact ="SELECT idasignaciontareas , actividades.nombre , actividades.descripcion , lotes.latitud , lotes.longitud FROM asignaciontareas INNER JOIN actividades ON actividades.idactividades= asignaciontareas.idactividad INNER JOIN lotes ON asignaciontareas.idLotes = lotes.idlotes where asignaciontareas.idempleado =" ;
 var consultacoordenadas = "SELECT idasignaciontareas , actividades.nombre  , lotes.latitud , lotes.longitud FROM asignaciontareas INNER JOIN actividades ON actividades.idactividades= asignaciontareas.idactividad INNER JOIN lotes ON asignaciontareas.idLotes = lotes.idlotes where   asignaciontareas.estatus=1 AND asignaciontareas.idasignaciontareas = ";
+var consultadesc = "SELECT lotes.nombre , propietarios.nombre , lotes.hectareas , cultivos.nombre , actividades.nombre , asignaciontareas.fecha_asignacion , asignaciontareas.comentarios FROM asignaciontareas INNER JOIN lotes ON lotes.idlotes = asignaciontareas.idlotes INNER JOIN cultivos ON lotes.cultivo = cultivos.idcultivos INNER JOIN actividades ON actividades.idactividades = asignaciontareas.idactividad INNER JOIN propietarios ON propietarios.idpropietarios = lotes.id_propietario where asignaciontareas.idasignaciontareas = ";
 //---------------------INICIAR SERVIDOR-------------------------
 
  
@@ -75,13 +76,27 @@ server.get({path : PATH , version : '0.0.1'} , findAllUsers);
 server.get({path : PATH +'/:userId' , version : '0.0.1'} , findUser);
 server.post({path : PATH , version: '0.0.1'} , postNewUser);
 server.del({path : PATH +'/:userId' , version: '0.0.1'} , deleteUser);
+//------------------------BUSCAR DESC-------------------------------
+server.get({path:'/desc'+'/:idActividad',version:'0.0.1'},buscarDesc);
 //------------------------BUSCAR COORDENADAS----------------------
 server.get({path:'/actividades'+'/:idUsuario',version:'0.0.1'},buscarActividad);
 //------------------------------------------------------------------------------
 server.get({path:'/buscaridusuario'+'/:nombreusuario',version:'0.0.1'},buscaridusuario);
 //-------------------------BUSCAR COORDENADAS POR ID ACTIVIDAD--------------
 server.get({path:'/coordenadas'+'/:idActividad',version:'0.0.1'},buscarCO);
+
+
+//-------------------BUSCAR DESCRIPCION FUNCTION--------------------------
+function buscarDesc(req, res, next){
+  connection.query(consultadesc+'"'+req.params.idActividad+'"' + 'AND asignaciontareas.estatus=1;', function(error, results){
+     if(error) throw error;
+      console.log(results);
+      res.send(200, results);
+      return next();
+  });
+}
 //-------------------FUNCION PARA ENCONTRAR UN USUARIO EN ESPECIFICO-------
+
 function buscarActividad(req, res, next){
   connection.query(consultaact+'"'+req.params.idUsuario+'"' + 'AND asignaciontareas.estatus=1;', function(error, results){
      if(error) throw error;
