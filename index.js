@@ -55,7 +55,7 @@ console.log(decoded); //=> { foo: 'bar' }
 
 var consultaact ="SELECT idasignaciontareas , actividades.nombre , actividades.descripcion , lotes.latitud , lotes.longitud FROM asignaciontareas INNER JOIN actividades ON actividades.idactividades= asignaciontareas.idactividad INNER JOIN lotes ON asignaciontareas.idLotes = lotes.idlotes where asignaciontareas.idempleado =" ;
 var consultacoordenadas = "SELECT idasignaciontareas , actividades.nombre  , lotes.latitud , lotes.longitud FROM asignaciontareas INNER JOIN actividades ON actividades.idactividades= asignaciontareas.idactividad INNER JOIN lotes ON asignaciontareas.idLotes = lotes.idlotes where   asignaciontareas.estatus=1 AND asignaciontareas.idasignaciontareas = ";
-var consultadesc = "SELECT lotes.nombreLote , propietarios.nombre , lotes.hectareas , cultivos.nombre , actividades.nombre , asignaciontareas.fecha_asignacion , asignaciontareas.comentarios FROM asignaciontareas INNER JOIN lotes ON lotes.idlotes = ";
+var consultadesc = "SELECT lotes.nombreLote , propietarios.nombrePropietario , lotes.hectareas , cultivos.nombreCultivo , actividades.nombre , asignaciontareas.fecha_asignacion , asignaciontareas.comentarios FROM asignaciontareas INNER JOIN lotes ON lotes.idlotes = ";
 var consultadesc2 = " asignaciontareas.idlotes INNER JOIN cultivos ON lotes.cultivo = cultivos.idcultivos INNER JOIN actividades ON actividades.idactividades = asignaciontareas.idactividad INNER JOIN propietarios ON propietarios.idpropietarios = lotes.id_propietario where asignaciontareas.idasignaciontareas =";
 //---------------------INICIAR SERVIDOR-------------------------
 
