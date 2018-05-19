@@ -213,9 +213,35 @@ function postNewUser(req , res , next){
     res.end(JSON.stringify(results));
     console.log("REGISTRO");
   });
- 
- 
 }
+
+//-----------------------ACTUALIZAR TAREA-------------------------------------
+server.post('/actualizar',function(req,res,next){
+  var users={
+    "idActividad":req.body.actividad
+  }
+  var idActividad= req.body.actividad;
+  
+  connection.query('UPDATE asignaciontareas SET estatus=0 WHERE idasignaciontareas = ?',[idActividad], function (error, results, fields) {
+    
+  if (error) {
+    // console.log("error ocurred",error);
+    res.send({
+      "code":400,
+      "failed":"A ocurrido un error!"
+    })
+  }else{
+    res.send({
+      "code":200,
+      "hecho":"Realizado con exito!"
+    })
+  }
+  });
+
+});
+
+
+
 //--------------------ELIMINAR UN USUARIO EN ESPEFICICO--------------
 function deleteUser(req , res , next){
     connection.query('DELETE FROM usuarios WHERE id = '+req.params.userId, function (error, success){
