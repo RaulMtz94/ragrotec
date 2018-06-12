@@ -170,6 +170,49 @@ server.post('/login',function(req,res){
   }
   });
 });
+//Falta filtro para usuarios activos.---------------------------------
+server.post('/loginadmin',function(req,res){
+  var users={
+    "email":req.body.email,
+    "password":req.body.password
+  }
+  var email= req.body.email;
+  var password = req.body.password;
+  connection.query('SELECT * FROM usuarios WHERE tipo_usuario=1 AND username = ?',[email], function (error, results, fields) {
+    
+  if (error) {
+    // console.log("error ocurred",error);
+    res.send({
+      "code":400,
+      "failed":"A ocurrido un error!"
+    })
+  }else{
+    // console.log('The solution is: ', results);
+    if(results.length >0){
+      console.log(results);
+      console.log(results[0].password);
+      if(results[0].password == password){
+        res.send({
+          "code":200,
+          "success":"Login completo"
+            });
+      }
+      else{
+        res.send({
+          "code":204,
+          "success":"El email y el password no coinciden"
+            });
+      }
+    }
+    else{
+      res.send({
+        "code":204,
+        "success":"El email no existe"
+          });
+    }
+  }
+  });
+});
 
 //----------ruta protegida------------------
 server.post('/protegida',function(req,res,next){
