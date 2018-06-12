@@ -207,7 +207,7 @@ server.post('/loginadmin',function(req,res){
     else{
       res.send({
         "code":204,
-        "success":"El email no existe"
+        "success":"Usted no es un administrador"
           });
     }
   }
