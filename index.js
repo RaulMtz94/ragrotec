@@ -85,6 +85,8 @@ server.get({path:'/actividades'+'/:idUsuario',version:'0.0.1'},buscarActividad);
 server.get({path:'/buscaridusuario'+'/:nombreusuario',version:'0.0.1'},buscaridusuario);
 //-------------------------BUSCAR COORDENADAS POR ID ACTIVIDAD--------------
 server.get({path:'/coordenadas'+'/:idActividad',version:'0.0.1'},buscarCO);
+//-----------BUSCAR ACTIVIDADES TERMINADAS
+server.get({path:'/actterminadas',version:'0.0.1'},findActF);
 
 
 //-------------------BUSCAR DESCRIPCION FUNCTION--------------------------
@@ -228,6 +230,15 @@ server.post('/protegida',function(req,res,next){
 });
 
 //--------------------------------------------------------------
+//-----------------FUNCION PARA LISTAR ACTIVIDADES TERMINADAS
+function findActF(req, res, next){
+  connection.query('SELECT actividades.nombre , lotes.nombreLote , usuarios.username , asignaciontareas.fecha_termino FROM asignaciontareas INNER JOIN actividades ON asignaciontareas.idactividad = actividades.idactividades INNER JOIN lotes ON asignaciontareas.idLotes = lotes.idlotes INNER JOIN usuarios ON asignaciontareas.idempleado = usuarios.id WHERE asignaciontareas.estatus = 1', function (error, results){
+    if(error) throw error;
+    console.log(results);
+    res.send(200, results);
+    return next();
+});
+}
 //------------------------FUNCION PARA LEER TODOS LOS USUARIOS--
 function findAllUsers(req, res, next){
     connection.query('SELECT * FROM usuarios', function (error, results){
