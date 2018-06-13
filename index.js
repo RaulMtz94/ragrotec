@@ -87,6 +87,8 @@ server.get({path:'/buscaridusuario'+'/:nombreusuario',version:'0.0.1'},buscaridu
 server.get({path:'/coordenadas'+'/:idActividad',version:'0.0.1'},buscarCO);
 //-----------BUSCAR ACTIVIDADES TERMINADAS
 server.get({path:'/actterminadas',version:'0.0.1'},findActF);
+//--------BUSCAR ACTIVIDADES PENDIENTES DE REALIZAR 
+server.get({path:'/actpendientes',version:'0.0.1'},findActP);
 
 
 //-------------------BUSCAR DESCRIPCION FUNCTION--------------------------
@@ -239,6 +241,20 @@ function findActF(req, res, next){
     return next();
 });
 }
+//--------FUNCION PARA BUSCAR LAS ACTIVIDADES PENDIENTES POR TERMINAR 
+
+function findActP(req, res, next){
+  connection.query('SELECT actividades.nombre , lotes.nombreLote , usuarios.username , asignaciontareas.fecha_termino FROM asignaciontareas INNER JOIN actividades ON asignaciontareas.idactividad = actividades.idactividades INNER JOIN lotes ON asignaciontareas.idLotes = lotes.idlotes INNER JOIN usuarios ON asignaciontareas.idempleado = usuarios.id WHERE asignaciontareas.estatus = 0', function (error, results){
+    if(error) throw error;
+    console.log(results);
+    res.send(200, results);
+    return next();
+});
+}
+
+
+
+
 //------------------------FUNCION PARA LEER TODOS LOS USUARIOS--
 function findAllUsers(req, res, next){
     connection.query('SELECT * FROM usuarios', function (error, results){
