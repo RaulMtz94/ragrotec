@@ -290,7 +290,7 @@ server.post('/actualizar',function(req,res,next){
   }
   var idActividad= req.body.actividad;
   
-  connection.query('UPDATE asignaciontareas SET estatus=0, fecha_termino=2018/06/14 WHERE idasignaciontareas = ?',[idActividad], function (error, results, fields) {
+  connection.query('UPDATE asignaciontareas SET estatus=0, fecha_termino='+'2018/06/14'+' WHERE idasignaciontareas = ?',[idActividad], function (error, results, fields) {
     
   if (error) {
     // console.log("error ocurred",error);
