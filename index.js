@@ -253,8 +253,6 @@ function findActP(req, res, next){
 }
 
 
-
-
 //------------------------FUNCION PARA LEER TODOS LOS USUARIOS--
 function findAllUsers(req, res, next){
     connection.query('SELECT * FROM usuarios', function (error, results){
@@ -292,7 +290,7 @@ server.post('/actualizar',function(req,res,next){
   }
   var idActividad= req.body.actividad;
   
-  connection.query('UPDATE asignaciontareas SET estatus=0 WHERE idasignaciontareas = ?',[idActividad], function (error, results, fields) {
+  connection.query('UPDATE asignaciontareas SET estatus=0, fecha_termino=14/06/2018 WHERE idasignaciontareas = ?',[idActividad], function (error, results, fields) {
     
   if (error) {
     // console.log("error ocurred",error);
