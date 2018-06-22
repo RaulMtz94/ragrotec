@@ -16,7 +16,7 @@ var db_config = {
   var db_config = {
     host: 'localhost',
     user: 'root',
-    password: 'raulmtz1',
+    password: 'xxx',
     database: 'agrotec'
 };
 */
