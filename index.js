@@ -5,10 +5,10 @@ var mysql = require('mysql');
 //----------CONTROL DE CONEXION MYSQL DATABASE-------------
 
 var db_config = {
-      host: 'sql135.main-hosting.eu',
-      user: 'u371251824_raul',
-      password: 'raulmtz1',
-      database: 'u371251824_agro'
+      host: 'xxxx',
+      user: 'xxxx',
+      password: 'xxxxx',
+      database: 'xxxx'
   };
   
   //---------------CONEXION LOCAL
